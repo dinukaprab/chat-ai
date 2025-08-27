@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Main from "@/app/Main";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Chat AI",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Main children={children} />
+      <body>
+        <Main children={children} />
+      </body>
     </html>
   );
 }

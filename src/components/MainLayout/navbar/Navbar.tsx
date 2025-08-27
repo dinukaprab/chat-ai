@@ -14,7 +14,7 @@ export default function Navbar({ height }: NavbarProps) {
     <>
       <Box
         sx={{
-          width: "calc(100% - 220px)",
+          width: `calc(100% - ${height}px)`,
           height: `${height}px`,
           position: "fixed",
           top: 0,
@@ -23,6 +23,7 @@ export default function Navbar({ height }: NavbarProps) {
           justifyContent: "flex-end",
           alignItems: "center",
           zIndex: 10,
+          backgroundColor: theme.palette.customBackground.main,
         }}
       >
         <Box

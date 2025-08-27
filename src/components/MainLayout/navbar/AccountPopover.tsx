@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { menuItemClasses } from "@mui/material/MenuItem";
-import { useStateContext } from "@/context/StateContext";
+import { useThemeContext } from "@/context/ThemeContext";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import NightsStayOutlinedIcon from "@mui/icons-material/NightsStayOutlined";
 import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlined";
@@ -48,7 +48,7 @@ export default function AccountPopover() {
   const [profileImage, setProfileImage] = useState(
     "/assets/avatars/avatar_hipster_kid.webp"
   );
-  const { themeMode: activeTheme, setThemeMode } = useStateContext();
+  const { themeMode: activeTheme, setThemeMode } = useThemeContext();
 
   const handleTogglePopover = useCallback(() => {
     setOpenPopover((prev) => !prev);

@@ -1,11 +1,12 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
 interface SidebarProps {
   width: number;
 }
 
 export default function Sidebar({ width }: SidebarProps) {
+  const theme = useTheme();
   return (
     <>
       <Box
@@ -15,6 +16,7 @@ export default function Sidebar({ width }: SidebarProps) {
           top: 0,
           left: 0,
           height: "100vh",
+          backgroundColor: theme.palette.customBackground.main,
         }}
       ></Box>
     </>
