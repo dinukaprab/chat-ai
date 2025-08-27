@@ -20,17 +20,31 @@ export const getAppTheme = (mode: "light" | "dark") =>
         secondary: mode === "light" ? "#282828e6" : "#dcdcdc",
       },
 
+      customButton: {
+        background:{
+          primary: mode === "light" ? "#282828" : "#f2f2f2",
+          secondary: mode === "light" ? "#ececec" : "#3c3c3c",
+        },
+        hoverBackground:{
+          primary: mode === "light" ? "#404040" : "#f2f2f2e6",
+          secondary: mode === "light" ? "#dadada" : "#d0d0fc33",
+        }
+      },
+
       customDivider: {
         primary: mode === "light" ? "#e2e2e2" : "#424242",
       },
 
       customBorder: {
         main: mode === "light" ? "#f0f0f0" : "#1c1c1c",
+        surface: mode === "light" ? "#d0d0d0" : "#595959",
       },
 
       customBackground: {
         main: mode === "light" ? "#f3f3f3" : "#131313",
+        paper: mode === "light" ? "#ffffff" : "#303030",
         surface: mode === "light" ? "#ffffff" : "#212121",
+        chips: mode === "light" ? "#f0f0f0" : "#595959",
       },
 
       popoverContainer: {

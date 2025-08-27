@@ -7,17 +7,31 @@ declare module "@mui/material/styles" {
       secondary: string;
     };
 
+    customButton: {
+      background: {
+        primary: string;
+        secondary: string;
+      };
+      hoverBackground: {
+        primary: string;
+        secondary: string;
+      };
+    };
+
     customDivider: {
       primary: string;
     };
 
     customBorder: {
       main: string;
+      surface: string;
     };
 
     customBackground: {
       main: string;
+      paper: string;
       surface: string;
+      chips: string;
     };
 
     popoverContainer: {
@@ -41,8 +55,20 @@ declare module "@mui/material/styles" {
       secondary?: string;
     };
 
+    customButton: {
+      background?: {
+        primary?: string;
+        secondary?: string;
+      };
+      hoverBackground?: {
+        primary?: string;
+        secondary?: string;
+      };
+    };
+
     customBorder: {
       main?: string;
+      surface?: string;
     };
 
     customDivider: {
@@ -51,7 +77,9 @@ declare module "@mui/material/styles" {
 
     customBackground: {
       main?: string;
+      paper?: string;
       surface?: string;
+      chips?: string;
     };
 
     popoverContainer?: {
