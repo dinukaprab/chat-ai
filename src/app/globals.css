@@ -1,7 +1,21 @@
 :root {
+  --background: #f3f3f3;
+  --foreground: #282828;
   --bg-color: var(--initial-bg, #f3f3f3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 [data-theme="dark"] {
   --bg-color: #131313 !important;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
 }

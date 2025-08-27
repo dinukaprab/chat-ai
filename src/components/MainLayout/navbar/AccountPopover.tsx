@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -13,6 +13,7 @@ import {
   IconButton,
   MenuItem,
   ClickAwayListener,
+  useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { menuItemClasses } from "@mui/material/MenuItem";
@@ -41,6 +42,7 @@ const menuItems = ["Settings", "Terms & policies", "Help", "Log out"];
 export default function AccountPopover() {
   const router = useRouter();
   const theme = useTheme();
+  const isTabletOrBelow = useMediaQuery(theme.breakpoints.down("md"));
   const [openPopover, setOpenPopover] = useState(false);
   const [firstName, setFirstName] = useState("Dinuka");
   const [lastName, setLastName] = useState("Prabath");
@@ -130,7 +132,7 @@ export default function AccountPopover() {
               <Box
                 sx={{
                   position: "absolute",
-                  top: "110%",
+                  top: isTabletOrBelow ? "105%" : "110%",
                   right: 0,
                   width: 210,
                   bgcolor: "background.paper",
@@ -270,12 +272,17 @@ export default function AccountPopover() {
                     {menuItems.map((item, index) => (
                       <MenuItem
                         key={index}
-                        sx={{ borderRadius: 5, px: 1, py: 0.7 }}
+                        sx={{
+                          borderRadius: 5,
+                          px: 1,
+                          py: isTabletOrBelow ? 0.4 : 0.7,
+                          minHeight: { xs: 30 },
+                        }}
                       >
                         <ListItemText>
                           <Typography
                             sx={{
-                              fontSize: 13,
+                              fontSize: isTabletOrBelow ? 12 : 13,
                               color: theme.palette.text.secondary,
                             }}
                           >
