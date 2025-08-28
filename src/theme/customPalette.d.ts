@@ -1,4 +1,4 @@
-import { Palette, PaletteOptions } from "@mui/material/styles";
+import "@mui/material/styles";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -28,10 +28,20 @@ declare module "@mui/material/styles" {
     };
 
     customBackground: {
+      default: string;
       main: string;
       paper: string;
       surface: string;
       chips: string;
+    };
+
+    customScrollbar: {
+      background: {
+        primary: string;
+      };
+      hoverBackground: {
+        primary: string;
+      };
     };
 
     popoverContainer: {
@@ -50,12 +60,12 @@ declare module "@mui/material/styles" {
   }
 
   interface PaletteOptions {
-    customText: {
+    customText?: {
       primary?: string;
       secondary?: string;
     };
 
-    customButton: {
+    customButton?: {
       background?: {
         primary?: string;
         secondary?: string;
@@ -66,20 +76,30 @@ declare module "@mui/material/styles" {
       };
     };
 
-    customBorder: {
+    customBorder?: {
       main?: string;
       surface?: string;
     };
 
-    customDivider: {
+    customDivider?: {
       primary?: string;
     };
 
-    customBackground: {
+    customBackground?: {
+      default?: string;
       main?: string;
       paper?: string;
       surface?: string;
       chips?: string;
+    };
+
+    customScrollbar?: {
+      background?: {
+        primary?: string;
+      };
+      hoverBackground?: {
+        primary?: string;
+      };
     };
 
     popoverContainer?: {

@@ -21,14 +21,14 @@ export const getAppTheme = (mode: "light" | "dark") =>
       },
 
       customButton: {
-        background:{
+        background: {
           primary: mode === "light" ? "#282828" : "#f2f2f2",
           secondary: mode === "light" ? "#ececec" : "#3c3c3c",
         },
-        hoverBackground:{
+        hoverBackground: {
           primary: mode === "light" ? "#404040" : "#f2f2f2e6",
           secondary: mode === "light" ? "#dadada" : "#d0d0fc33",
-        }
+        },
       },
 
       customDivider: {
@@ -41,10 +41,20 @@ export const getAppTheme = (mode: "light" | "dark") =>
       },
 
       customBackground: {
+        default: mode === "light" ? "#fff" : "#212121",
         main: mode === "light" ? "#f3f3f3" : "#131313",
         paper: mode === "light" ? "#ffffff" : "#303030",
         surface: mode === "light" ? "#ffffff" : "#212121",
         chips: mode === "light" ? "#f0f0f0" : "#595959",
+      },
+
+      customScrollbar: {
+        background: {
+          primary: mode === "light" ? "#b6b6b6" : "#646464",
+        },
+        hoverBackground: {
+          primary: mode === "light" ? "#1c1c1cb3" : "#edededb3",
+        },
       },
 
       popoverContainer: {

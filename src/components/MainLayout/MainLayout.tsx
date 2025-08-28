@@ -32,7 +32,11 @@ export default function Layout({ children }: LayoutProps): ReactElement {
           position: "relative",
           height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
           width: contentWidth,
-          marginLeft: `${contentMarginLeft}px`,
+          marginLeft: {
+            xs: `${contentMarginLeft - 3}px`,
+            sm: `${contentMarginLeft - 6}px`,
+            md: `${contentMarginLeft - 9}px`,
+          },
           marginTop: `${CONTENT_MARGIN_TOP}px`,
           borderRadius: 3,
           backgroundColor: theme.palette.customBackground.surface,
