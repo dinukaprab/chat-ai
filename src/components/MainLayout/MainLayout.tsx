@@ -15,6 +15,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps): ReactElement {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTabletOrBelow = useMediaQuery(theme.breakpoints.down("md"));
   const [sidebarOpen, setSidebarOpen] = useState(!isTabletOrBelow);
 
@@ -22,12 +23,22 @@ export default function Layout({ children }: LayoutProps): ReactElement {
     setSidebarOpen((prev) => !prev);
   }, []);
 
-  const contentMarginLeft = isTabletOrBelow || !sidebarOpen ? 65 : SIDEBAR_WIDTH;
+  const handleClickSearchChats = useCallback(() => {
+    // Open search chats functionality
+    console.log("Search Chats clicked");
+  }, []);
 
-  const contentWidth =
-    isTabletOrBelow || !sidebarOpen
-      ? "calc(100% - 65px)"
-      : `calc(100% - ${SIDEBAR_WIDTH}px)`;
+  const contentMarginLeft = isTabletOrBelow
+    ? 0
+    : sidebarOpen
+    ? SIDEBAR_WIDTH
+    : 65;
+
+  const contentWidth = isTabletOrBelow
+    ? "100%"
+    : sidebarOpen
+    ? `calc(100% - ${SIDEBAR_WIDTH}px)`
+    : "calc(100% - 65px)";
 
   return (
     <>
@@ -37,7 +48,14 @@ export default function Layout({ children }: LayoutProps): ReactElement {
         handleMoveSidebar={handleMoveSidebar}
       />
 
-      {!isTabletOrBelow && <Sidebar width={SIDEBAR_WIDTH} />}
+      {!isTabletOrBelow && (
+        <Sidebar
+          height={CONTENT_MARGIN_TOP}
+          width={sidebarOpen ? SIDEBAR_WIDTH : 65}
+          isSidebarOpen={sidebarOpen}
+          handleClickSearchChats={handleClickSearchChats}
+        />
+      )}
 
       <Box
         component="main"
@@ -53,8 +71,7 @@ export default function Layout({ children }: LayoutProps): ReactElement {
           marginTop: `${CONTENT_MARGIN_TOP}px`,
           borderRadius: 3,
           backgroundColor: theme.palette.customBackground.surface,
-          border: `2px solid ${theme.palette.customBorder.main}`,
-          overflow: "auto",
+          overflow: "hidden",
           transition: "all 0.3s ease",
         }}
       >
