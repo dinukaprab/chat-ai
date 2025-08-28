@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, ReactElement } from "react";
+import React, { ReactNode, ReactElement, useCallback, useState } from "react";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 import Navbar from "./navbar/Navbar";
 import Sidebar from "./sidebar/Sidebar";
@@ -16,16 +16,29 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps): ReactElement {
   const theme = useTheme();
   const isTabletOrBelow = useMediaQuery(theme.breakpoints.down("md"));
+  const [sidebarOpen, setSidebarOpen] = useState(!isTabletOrBelow);
 
-  const contentMarginLeft = isTabletOrBelow ? 0 : SIDEBAR_WIDTH;
-  const contentWidth = isTabletOrBelow
-    ? "100%"
-    : `calc(100% - ${SIDEBAR_WIDTH}px)`;
+  const handleMoveSidebar = useCallback(() => {
+    setSidebarOpen((prev) => !prev);
+  }, []);
+
+  const contentMarginLeft = isTabletOrBelow || !sidebarOpen ? 65 : SIDEBAR_WIDTH;
+
+  const contentWidth =
+    isTabletOrBelow || !sidebarOpen
+      ? "calc(100% - 65px)"
+      : `calc(100% - ${SIDEBAR_WIDTH}px)`;
 
   return (
     <>
-      <Navbar height={CONTENT_MARGIN_TOP} />
+      <Navbar
+        height={CONTENT_MARGIN_TOP}
+        width={SIDEBAR_WIDTH}
+        handleMoveSidebar={handleMoveSidebar}
+      />
+
       {!isTabletOrBelow && <Sidebar width={SIDEBAR_WIDTH} />}
+
       <Box
         component="main"
         sx={{
@@ -42,6 +55,7 @@ export default function Layout({ children }: LayoutProps): ReactElement {
           backgroundColor: theme.palette.customBackground.surface,
           border: `2px solid ${theme.palette.customBorder.main}`,
           overflow: "auto",
+          transition: "all 0.3s ease",
         }}
       >
         {children}

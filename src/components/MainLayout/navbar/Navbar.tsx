@@ -2,30 +2,69 @@ import React from "react";
 import { Box, IconButton, useTheme } from "@mui/material";
 import AccountPopover from "./AccountPopover";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import VerticalSplitOutlinedIcon from "@mui/icons-material/VerticalSplitOutlined";
 
 interface NavbarProps {
   height: number;
+  width: number;
+  handleMoveSidebar?: () => void;
 }
 
-export default function Navbar({ height }: NavbarProps) {
+export default function Navbar({
+  height,
+  width,
+  handleMoveSidebar,
+}: NavbarProps) {
   const theme = useTheme();
 
   return (
     <>
       <Box
         sx={{
-          width: `calc(100% - ${height}px)`,
+          width: "100%",
           height: `${height}px`,
           position: "fixed",
           top: 0,
           right: 0,
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           alignItems: "center",
           zIndex: 10,
           backgroundColor: theme.palette.customBackground.main,
         }}
       >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            width: `${width - 30}px`,
+            height: "100%",
+            ml: 1,
+          }}
+        >
+          <IconButton
+            onClick={handleMoveSidebar}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: "8px 10px",
+              borderRadius: 1.5,
+              "&:hover": {
+                backgroundColor: theme.palette.customDivider.primary,
+              },
+            }}
+          >
+            <VerticalSplitOutlinedIcon
+              sx={{
+                fontSize: 22,
+                color: theme.palette.customText.secondary,
+              }}
+            />
+          </IconButton>
+        </Box>
+
         <Box
           sx={{
             display: "flex",
