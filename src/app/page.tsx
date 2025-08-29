@@ -39,6 +39,13 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleKeyPress = (e: any) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
   const handleInputFocus = () => {
     setIsFocused(true);
   };
@@ -264,6 +271,7 @@ export default function Home() {
             variant="outlined"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
+            onKeyPress={handleKeyPress}
             onFocus={handleInputFocus}
             onBlur={handleInputBlur}
             placeholder="How can I help you today?"
