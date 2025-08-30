@@ -2,7 +2,12 @@
 
 import { ReactNode } from "react";
 import { ThemeProvider } from "./ThemeContext";
+import { SnackbarProvider } from "./SnackbarContext";
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {
-  return <ThemeProvider>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider>
+      <SnackbarProvider>{children}</SnackbarProvider>
+    </ThemeProvider>
+  );
 };
