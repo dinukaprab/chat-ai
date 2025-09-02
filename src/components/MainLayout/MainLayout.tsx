@@ -4,6 +4,7 @@ import React, { ReactNode, ReactElement, useCallback, useState } from "react";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 import Navbar from "./navbar/Navbar";
 import Sidebar from "./sidebar/Sidebar";
+import { useLocalStorage } from "@/hooks";
 
 const NAVBAR_HEIGHT = 65;
 const SIDEBAR_WIDTH = 225;
@@ -17,10 +18,16 @@ export default function Layout({ children }: LayoutProps): ReactElement {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTabletOrBelow = useMediaQuery(theme.breakpoints.down("md"));
-  const [sidebarOpen, setSidebarOpen] = useState(!isTabletOrBelow);
+  const userId = "user-KKmaW89a9xEdZdFhbpaQ0RYn";
+  const [appSettings, setAppSettings] = useLocalStorage(
+    `cache/${userId}/app-settings`,
+    { sidebarOpen: !isTabletOrBelow }
+  );
 
-  const handleMoveSidebar = useCallback(() => {
-    setSidebarOpen((prev) => !prev);
+  const sidebarOpen = appSettings.sidebarOpen ?? !isTabletOrBelow;
+
+  const handleMoveSidebar = useCallback((value: boolean) => {
+    setAppSettings((prev) => ({ ...prev, sidebarOpen: value }));
   }, []);
 
   const handleClickSearchChats = useCallback(() => {
@@ -45,6 +52,7 @@ export default function Layout({ children }: LayoutProps): ReactElement {
       <Navbar
         height={CONTENT_MARGIN_TOP}
         width={SIDEBAR_WIDTH}
+        sidebarOpen={sidebarOpen}
         handleMoveSidebar={handleMoveSidebar}
       />
 

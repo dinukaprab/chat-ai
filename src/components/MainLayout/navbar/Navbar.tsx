@@ -7,12 +7,14 @@ import VerticalSplitOutlinedIcon from "@mui/icons-material/VerticalSplitOutlined
 interface NavbarProps {
   height: number;
   width: number;
-  handleMoveSidebar?: () => void;
+  sidebarOpen: boolean;
+  handleMoveSidebar?: (value: boolean) => void;
 }
 
 export default function Navbar({
   height,
   width,
+  sidebarOpen,
   handleMoveSidebar,
 }: NavbarProps) {
   const theme = useTheme();
@@ -44,7 +46,7 @@ export default function Navbar({
           }}
         >
           <IconButton
-            onClick={handleMoveSidebar}
+            onClick={() => handleMoveSidebar?.(!sidebarOpen)}
             sx={{
               display: "flex",
               justifyContent: "center",
