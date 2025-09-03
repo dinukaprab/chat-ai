@@ -6,6 +6,7 @@ import { StateProvider } from "@/context/StateContext";
 import { getAppTheme } from "@/theme/Theme";
 import { HydrationWrapper } from "@/components/HydrationWrapper/HydrationWrapper";
 import MainLayout from "@/components/MainLayout/MainLayout";
+import { useBootstrap } from "@/hooks";
 
 const lightTheme = getAppTheme("light");
 const darkTheme = getAppTheme("dark");
@@ -13,6 +14,8 @@ const darkTheme = getAppTheme("dark");
 function MainContent({ children }: { children: ReactNode }) {
   const { effectiveTheme, isHydrated } = useThemeContext();
   const initializedRef = useRef(false);
+
+  useBootstrap();
 
   const appTheme = useMemo(() => {
     return effectiveTheme === "dark" ? darkTheme : lightTheme;
