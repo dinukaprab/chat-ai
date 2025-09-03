@@ -1,1 +1,2 @@
-export * from "./useLocalStorage"
+export * from "./localStorage/useLocalStorage"
+export * from "./localStorage/useAppSettings"

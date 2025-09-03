@@ -6,63 +6,91 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
+  useMemo,
+  useRef,
 } from "react";
-
-type ThemeMode = "light" | "dark" | "system";
+import { useAppSettings, ThemeType } from "@/hooks";
 
 type ThemeContextType = {
-  themeMode: ThemeMode;
-  setThemeMode: (mode: ThemeMode) => void;
+  themeMode: ThemeType;
+  setThemeMode: (mode: ThemeType) => void;
   effectiveTheme: "light" | "dark";
+  activeTheme: ThemeType;
   isHydrated: boolean;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const getInitialSystemTheme = (): "light" | "dark" => {
+  if (typeof window === "undefined") return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [themeMode, setThemeModeState] = useState<ThemeMode>("system");
-  const [systemTheme, setSystemTheme] = useState<"light" | "dark">("light");
+  const { settings, setSettings, isLoaded } = useAppSettings();
+  const [systemTheme, setSystemTheme] = useState<"light" | "dark">(() =>
+    getInitialSystemTheme()
+  );
   const [isHydrated, setIsHydrated] = useState(false);
+  const systemThemeListenerRef = useRef<MediaQueryList | null>(null);
+
+  const themeMode = useMemo(() => settings.theme, [settings.theme]);
 
   useEffect(() => {
-    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemTheme(darkQuery.matches ? "dark" : "light");
+    if (typeof window === "undefined") return;
 
-    const updateSystemTheme = () => {
-      setSystemTheme(darkQuery.matches ? "dark" : "light");
+    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    systemThemeListenerRef.current = darkQuery;
+
+    const updateSystemTheme = (e: MediaQueryListEvent) => {
+      setSystemTheme(e.matches ? "dark" : "light");
     };
 
     darkQuery.addEventListener("change", updateSystemTheme);
-    return () => darkQuery.removeEventListener("change", updateSystemTheme);
-  }, []);
-
-  useEffect(() => {
     setIsHydrated(true);
-    try {
-      const saved = localStorage.getItem("themeMode") as ThemeMode | null;
-      if (saved && ["light", "dark", "system"].includes(saved)) {
-        setThemeModeState(saved);
-      }
-    } catch (error) {
-      console.warn("Could not access localStorage:", error);
-    }
+
+    return () => {
+      darkQuery.removeEventListener("change", updateSystemTheme);
+    };
   }, []);
 
-  const setThemeMode = (mode: ThemeMode) => {
-    setThemeModeState(mode);
-    try {
-      localStorage.setItem("themeMode", mode);
-    } catch (error) {
-      console.warn("Could not save to localStorage:", error);
-    }
-  };
+  const setThemeMode = useCallback(
+    (mode: ThemeType) => {
+      setSettings((prev) => ({
+        ...prev,
+        theme: mode,
+      }));
+    },
+    [setSettings]
+  );
 
-  const effectiveTheme = themeMode === "system" ? systemTheme : themeMode;
+  const effectiveTheme = useMemo((): "light" | "dark" => {
+    return themeMode === "system" ? systemTheme : themeMode;
+  }, [themeMode, systemTheme]);
+
+  const contextValue = useMemo(
+    () => ({
+      themeMode,
+      setThemeMode,
+      effectiveTheme,
+      activeTheme: settings.theme,
+      isHydrated: isHydrated && isLoaded,
+    }),
+    [
+      themeMode,
+      setThemeMode,
+      effectiveTheme,
+      settings.theme,
+      isHydrated,
+      isLoaded,
+    ]
+  );
 
   return (
-    <ThemeContext.Provider
-      value={{ themeMode, setThemeMode, effectiveTheme, isHydrated }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

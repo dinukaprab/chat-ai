@@ -1,14 +1,15 @@
 "use client";
 
-import React, { ReactNode, ReactElement, useCallback, useState } from "react";
+import React, { ReactNode, ReactElement, useCallback, useMemo } from "react";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 import Navbar from "./navbar/Navbar";
 import Sidebar from "./sidebar/Sidebar";
-import { useLocalStorage } from "@/hooks";
+import { useAppSettings } from "@/hooks";
 
 const NAVBAR_HEIGHT = 65;
 const SIDEBAR_WIDTH = 225;
 const CONTENT_MARGIN_TOP = 55;
+const SIDEBAR_COLLAPSED_WIDTH = 65;
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,34 +19,73 @@ export default function Layout({ children }: LayoutProps): ReactElement {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTabletOrBelow = useMediaQuery(theme.breakpoints.down("md"));
-  const userId = "user-KKmaW89a9xEdZdFhbpaQ0RYn";
-  const [appSettings, setAppSettings] = useLocalStorage(
-    `cache/${userId}/app-settings`,
-    { sidebarOpen: !isTabletOrBelow }
+  const { settings, setSettings } = useAppSettings();
+
+  const sidebarOpen = settings.sidebarOpen;
+
+  const handleMoveSidebar = useCallback(
+    (value: boolean) => {
+      setSettings((prev) => ({
+        ...prev,
+        sidebarOpen: value,
+      }));
+    },
+    [setSettings]
   );
 
-  const sidebarOpen = appSettings.sidebarOpen ?? !isTabletOrBelow;
-
-  const handleMoveSidebar = useCallback((value: boolean) => {
-    setAppSettings((prev) => ({ ...prev, sidebarOpen: value }));
-  }, []);
-
   const handleClickSearchChats = useCallback(() => {
-    // Open search chats functionality
     console.log("Search Chats clicked");
   }, []);
 
-  const contentMarginLeft = isTabletOrBelow
-    ? 0
-    : sidebarOpen
-    ? SIDEBAR_WIDTH
-    : 65;
+  const layoutMetrics = useMemo(() => {
+    const contentMarginLeft = isTabletOrBelow
+      ? 0
+      : sidebarOpen
+      ? SIDEBAR_WIDTH
+      : SIDEBAR_COLLAPSED_WIDTH;
 
-  const contentWidth = isTabletOrBelow
-    ? "100%"
-    : sidebarOpen
-    ? `calc(100% - ${SIDEBAR_WIDTH}px)`
-    : "calc(100% - 65px)";
+    const contentWidth = isTabletOrBelow
+      ? "100%"
+      : sidebarOpen
+      ? `calc(100% - ${SIDEBAR_WIDTH}px)`
+      : `calc(100% - ${SIDEBAR_COLLAPSED_WIDTH}px)`;
+
+    const sidebarWidth = sidebarOpen ? SIDEBAR_WIDTH : SIDEBAR_COLLAPSED_WIDTH;
+
+    return {
+      contentMarginLeft,
+      contentWidth,
+      sidebarWidth,
+    };
+  }, [isTabletOrBelow, sidebarOpen]);
+
+  const responsiveMargins = useMemo(
+    () => ({
+      xs: `${layoutMetrics.contentMarginLeft - 3}px`,
+      sm: `${layoutMetrics.contentMarginLeft - 6}px`,
+      md: `${layoutMetrics.contentMarginLeft - 9}px`,
+    }),
+    [layoutMetrics.contentMarginLeft]
+  );
+
+  const mainContentStyles = useMemo(
+    () => ({
+      position: "relative" as const,
+      height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
+      width: layoutMetrics.contentWidth,
+      marginLeft: responsiveMargins,
+      marginTop: `${CONTENT_MARGIN_TOP}px`,
+      borderRadius: 3,
+      backgroundColor: theme.palette.customBackground.surface,
+      overflow: "hidden" as const,
+      transition: "all 0.3s ease",
+    }),
+    [
+      layoutMetrics.contentWidth,
+      responsiveMargins,
+      theme.palette.customBackground.surface,
+    ]
+  );
 
   return (
     <>
@@ -59,30 +99,13 @@ export default function Layout({ children }: LayoutProps): ReactElement {
       {!isTabletOrBelow && (
         <Sidebar
           height={CONTENT_MARGIN_TOP}
-          width={sidebarOpen ? SIDEBAR_WIDTH : 65}
+          width={layoutMetrics.sidebarWidth}
           isSidebarOpen={sidebarOpen}
           handleClickSearchChats={handleClickSearchChats}
         />
       )}
 
-      <Box
-        component="main"
-        sx={{
-          position: "relative",
-          height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
-          width: contentWidth,
-          marginLeft: {
-            xs: `${contentMarginLeft - 3}px`,
-            sm: `${contentMarginLeft - 6}px`,
-            md: `${contentMarginLeft - 9}px`,
-          },
-          marginTop: `${CONTENT_MARGIN_TOP}px`,
-          borderRadius: 3,
-          backgroundColor: theme.palette.customBackground.surface,
-          overflow: "hidden",
-          transition: "all 0.3s ease",
-        }}
-      >
+      <Box component="main" sx={mainContentStyles}>
         {children}
       </Box>
     </>
