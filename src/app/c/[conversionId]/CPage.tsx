@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "next/navigation";
 import {
   Box,
   Button,
@@ -15,15 +16,23 @@ import AddIcon from "@mui/icons-material/Add";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import CircularLoader from "@/components/Loaders/CircularLoader";
+import { useConversations } from "@/hooks";
 
 export default function CPage() {
   const theme = useTheme();
+  const params = useParams();
   const middleRef = useRef<HTMLDivElement | null>(null);
   const textRef = useRef<HTMLTextAreaElement | null>(null);
   const [loading, setLoading] = useState(false);
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const [message, setMessage] = useState("");
   const [isMultilineActive, setIsMultilineActive] = useState(false);
+  const { conversations } = useConversations();
+  const conversationId = params?.conversionId;
+
+  const chatTitle = conversations.value.pages[0]?.find(
+    (conv: any) => conv.chatId === conversationId
+  )?.title;
 
   useEffect(() => {
     if (middleRef.current) {
@@ -165,7 +174,7 @@ export default function CPage() {
               color: theme.palette.customText.secondary,
             }}
           >
-            Chat 1
+            {chatTitle}
           </Typography>
         </Button>
         <Button

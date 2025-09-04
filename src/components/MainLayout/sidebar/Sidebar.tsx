@@ -151,7 +151,7 @@ export default function Sidebar({
           />
         ) : null}
 
-        {loading ? (
+        {loading && isSidebarOpen ? (
           <Box sx={{ px: 1 }}>
             {Array.from({ length: 3 }).map((_, i) => (
               <Skeleton
